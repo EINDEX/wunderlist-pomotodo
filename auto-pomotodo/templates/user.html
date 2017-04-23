@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="col-md-6 container">
+            <ul class="list-group col-md-12 checked-list-box" data-toggle="buttons">
+                {% for item in data %}
+                    <li class="col-md-12  list-group-item {% if item['webhooks'] %} list-group-item-success {% endif %}">
+                        <input type="checkbox" id="{{ item['id'] }}" onclick="update_list(this.id,this.checked)"
+                                {% if item['webhooks'] %} checked {% endif %} name="{{ item['id'] }}"/>
+                        {{ item['title'] }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit" class="btn col-md-12">更新</button>
+        </div>
+    </div>
+    <script>
+        function update_list(id, checked) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('PUT', '/user/list/' + id)
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                   console.info('ok')
+                }
+            };
+            xhr.send(JSON.stringify({
+                checked: checked
+            }));
+        }
+    </script>
+{% endblock %}
